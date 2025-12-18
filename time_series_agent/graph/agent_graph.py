@@ -22,10 +22,20 @@ from utils.file_utils import FileManager
 
 
 # Define the state schema for LangGraph
-class AgentState(TypedDict, total=False):
-    """State schema for the time series agent workflow"""
+class AgentState(TypedDict):
+    """
+    State schema for the time series agent workflow.
+    Required fields must be present when initializing state.
+    """
+    # Required fields - must be present at initialization
     validation_data: pd.DataFrame
     test_data: pd.DataFrame
+    slice_info: Dict[str, Any]
+    config: Dict[str, Any]
+
+
+class AgentStateOptional(TypedDict, total=False):
+    """Optional fields that are populated during workflow execution"""
     preprocessed_data: pd.DataFrame
     preprocess_result: Dict[str, Any]
     analysis_result: Any
@@ -35,8 +45,12 @@ class AgentState(TypedDict, total=False):
     model_validation_scores: Dict[str, float]
     forecast_result: Dict[str, Any]
     report: Any
-    slice_info: Dict[str, Any]
-    config: Dict[str, Any]
+
+
+# Combine required and optional fields
+class CompleteAgentState(AgentState, AgentStateOptional):
+    """Complete agent state combining required and optional fields"""
+    pass
 
 class TimeSeriesAgentGraph:
     """
@@ -67,20 +81,20 @@ class TimeSeriesAgentGraph:
             "report": self._report_node,
         }
 
-    def _preprocess_node(self, state: AgentState) -> AgentState:
+    def _preprocess_node(self, state: CompleteAgentState) -> CompleteAgentState:
         result = self.preprocess_agent.run(state["validation_data"])
         state["preprocessed_data"] = result if isinstance(result, pd.DataFrame) else result.get("cleaned_data", state["validation_data"])
         state["preprocess_result"] = result
         return state
 
-    def _analyze_node(self, state: AgentState) -> AgentState:
+    def _analyze_node(self, state: CompleteAgentState) -> CompleteAgentState:
         visualizations = state["preprocess_result"]["visualizations"]
         result = self.analysis_agent.run(state["preprocessed_data"], visualizations)
         state["analysis_result"] = result
         print("analysis_result: ", state["analysis_result"])
         return state
 
-    def _validate_node(self, state: AgentState) -> AgentState:
+    def _validate_node(self, state: CompleteAgentState) -> CompleteAgentState:
         available_models = self.config.get('models').get('available_models')
         print(f"{len(available_models)} available models: {available_models}")
         
@@ -98,7 +112,7 @@ class TimeSeriesAgentGraph:
         
         return state
 
-    def _forecast_node(self, state: AgentState) -> AgentState:
+    def _forecast_node(self, state: CompleteAgentState) -> CompleteAgentState:
         # Pass selected models, best hyperparameters, and test data to forecast agent
         print(f"Forecast node: Processing slice {state.get('slice_info', {}).get('slice_id', 'unknown')}")
         print(f"Forecast node: Selected models: {state.get('selected_models', [])}")
@@ -119,7 +133,7 @@ class TimeSeriesAgentGraph:
         state["forecast_result"] = result
         return state
 
-    def _report_node(self, state: AgentState) -> AgentState:
+    def _report_node(self, state: CompleteAgentState) -> CompleteAgentState:
         print(f"Report node: Processing slice {state.get('slice_info', {}).get('slice_id', 'unknown')+1}")
         print(f"Report node: State keys before processing: {list(state.keys())}")
         print(f"Report node: forecast_result exists: {'forecast_result' in state}")
@@ -168,7 +182,7 @@ class TimeSeriesAgentGraph:
 
     def _build_graph(self):
         nodes = self._create_agent_nodes()
-        workflow = StateGraph(AgentState)
+        workflow = StateGraph(CompleteAgentState)
         workflow.add_node("preprocess", nodes["preprocess"])
         workflow.add_node("analyze", nodes["analyze"])
         workflow.add_node("validate", nodes["validate"])
