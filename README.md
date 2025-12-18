@@ -36,7 +36,10 @@
       <img src="https://img.shields.io/badge/Project-Website-blue?style=flat-square&logo=googlechrome" alt="Project Website">
     </a>
     <a href="#">
-      <img src="https://img.shields.io/badge/LangGraph-0.4.8-042f2c?style=flat-square&logo=langgraph" alt="LangGraph 0.4.8">
+      <img src="https://img.shields.io/badge/LangChain-1.2.0-1C3C3C?style=flat-square" alt="LangChain 1.2.0">
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/LangGraph-1.0.5-042f2c?style=flat-square" alt="LangGraph 1.0.5">
     </a>
     <!-- <a href="https://github.com/Y-Research-SBU/TimeSeriesScientist/issues/1">
       <img src="https://img.shields.io/badge/WeChat-Group-green?style=flat-square&logo=wechat" alt="WeChat Group">
@@ -64,8 +67,24 @@
 ![workflow](/assets/framework.png)
 
 ## 📢 News
+- **2025.12.18** 🎉 Updated to LangChain 1.2.0 & LangGraph 1.0.5! Comprehensive documentation added!
 - **2025.10.02** Our paper is now available on [arXiv](https://arxiv.org/abs/2510.01538)! 📄
 - **2025.10.01** Code Released. TimeSeriesScientist now available! 🎉🎉
+
+## 📖 Documentation
+
+For AI agent beginners and developers, we provide comprehensive documentation:
+
+- **[AI Agent Architecture Guide (中文)](docs/AI_AGENT_GUIDE_CN.md)** - 详细的 AI Agent 架构和 LangChain/LangGraph 使用指南
+- **[AI Agent Architecture Guide (English)](docs/AI_AGENT_GUIDE_EN.md)** - Comprehensive AI Agent architecture and LangChain/LangGraph usage guide
+- **[Migration Guide](docs/MIGRATION_GUIDE.md)** - How to upgrade from older versions to LangChain 1.2.0 & LangGraph 1.0.5
+
+These guides cover:
+- 🏗️ **Architecture**: Understanding the multi-agent system design
+- 🔧 **Implementation**: Detailed code examples and best practices
+- 📚 **LangChain/LangGraph**: From basics to advanced usage
+- 🚀 **Migration**: Step-by-step upgrade instructions
+- 💡 **Best Practices**: Tips for building robust AI agents
 
 ## 🚀 Quick Start
 

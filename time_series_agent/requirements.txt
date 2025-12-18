@@ -22,9 +22,10 @@ xgboost>=1.6.0
 lightgbm>=3.3.0
 
 # LLM and workflow
-langchain>=0.1.0
-langchain-openai>=0.1.0
-langgraph>=0.1.0
+langchain==1.2.0
+langchain-core==0.3.27
+langchain-openai==0.3.2
+langgraph==1.0.5
 openai>=1.0.0
 
 # Data processing
